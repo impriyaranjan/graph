@@ -1,0 +1,53 @@
+import java.util.*;
+import java.io.*;
+public class MyClass {
+ 
+    static class Edge{
+        int src;
+        int nbr;
+        int wt;
+        Edge(int src,int nbr,int wt){
+            this.src=src;
+            this.nbr=nbr;
+            this.wt=wt;
+        }
+    } 
+    static boolean hasPath(ArrayList<Edge>[] graph,int src,int dest,boolean[] visited){
+        if(src == dest)
+            return true;
+            
+        visited[src]=true;  //mark evey src not to repeat while eular move;
+        for(Edge edge:graph[src]){
+            if(visited[edge.nbr] == false){
+               boolean hasnbrPath=hasPath(graph,edge.nbr,dest,visited);
+               if(hasnbrPath==true)
+                    return true;
+            }
+        }
+        return false;
+    }
+    public static void main(String[] args) throws Exception{
+      BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+      int vertices=Integer.parseInt(br.readLine());
+      ArrayList<Edge>[] graph=new ArrayList[vertices];  //graph is array of ArrayList;
+      for(int i=0;i<vertices;i++){
+          graph[i]=new ArrayList<>();
+      }
+      int edges=Integer.parseInt(br.readLine());
+      for(int i=0;i<edges;i++){
+        String[] parts=br.readLine().split(" ");  //split parts
+        int v1=Integer.parseInt(parts[0]);
+        int v2=Integer.parseInt(parts[1]);
+        int wt=Integer.parseInt(parts[2]);
+        graph[v1].add(new Edge(v1,v2,wt));  //at two places it will occur;
+        graph[v2].add(new Edge(v2,v1,wt));
+      }
+      int src=Integer.parseInt(br.readLine());
+      int dest=Integer.parseInt(br.readLine());
+      
+      boolean[] visited=new boolean[vertices];
+      boolean path=hasPath(graph,src,dest,visited);
+      System.out.println(path);
+    }
+    
+}
